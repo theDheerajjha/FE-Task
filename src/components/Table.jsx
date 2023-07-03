@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-import Select from "react-select";
 
 const Table = () => {
   const [records, setRecords] = useState(() => {
@@ -15,6 +14,7 @@ const Table = () => {
             status: "Active",
             lastUpdated: "2023-07-01",
             notes: "Lorem ipsum dolor sit amet",
+            selected: false,
           },
           {
             id: 2,
@@ -23,6 +23,7 @@ const Table = () => {
             status: "Inactive",
             lastUpdated: "2023-06-28",
             notes: "Consectetur adipiscing elit",
+            selected: false,
           },
           {
             id: 3,
@@ -31,57 +32,166 @@ const Table = () => {
             status: "Active",
             lastUpdated: "2023-07-02",
             notes: "Sed do eiusmod tempor incididunt",
+            selected: false,
           },
         ];
   });
 
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [filterOptions, setFilterOptions] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+  const [newMember, setNewMember] = useState({
+    name: "",
+    company: "",
+    status: "",
+    lastUpdated: "",
+    notes: "",
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tableRecords", JSON.stringify(records));
+  }, [records]);
+
+  const toggleSelectAll = () => {
+    const updatedRecords = records.map((record) => ({
+      ...record,
+      selected: !selectAll,
+    }));
+    setRecords(updatedRecords);
+    setSelectAll(!selectAll);
+  };
 
   const deleteRecord = (id) => {
     setRecords(records.filter((record) => record.id !== id));
   };
 
-  const populateFilterOptions = () => {
-    const uniqueStatusValues = Array.from(
-      new Set(records.map((record) => record.status))
-    );
-    const options = uniqueStatusValues.map((value) => ({
-      value,
-      label: value,
-    }));
-    setFilterOptions(options);
+  const handleAddMember = () => {
+    setIsAddMemberOpen(true);
   };
 
-  useEffect(() => {
-    populateFilterOptions();
-  }, [records]);
-
-  const handleFilterChange = (selectedOptions) => {
-    setSelectedFilters(selectedOptions);
+  const handleCancelAddMember = () => {
+    setIsAddMemberOpen(false);
+    setNewMember({
+      name: "",
+      company: "",
+      status: "",
+      lastUpdated: "",
+      notes: "",
+    });
   };
 
-  const filteredRecords = selectedFilters.length
-    ? records.filter((record) =>
-        selectedFilters.some((option) => option.value === record.status)
-      )
-    : records;
+  const handleSubmitAddMember = () => {
+    const id = records.length + 1;
+    const newRecord = {
+      id,
+      ...newMember,
+      selected: false,
+    };
+    setRecords([...records, newRecord]);
+    setIsAddMemberOpen(false);
+    setNewMember({
+      name: "",
+      company: "",
+      status: "",
+      lastUpdated: "",
+      notes: "",
+    });
+  };
 
   return (
     <div>
-      <div className="filter-container">
-        <Select
-          options={filterOptions}
-          isMulti
-          value={selectedFilters}
-          onChange={handleFilterChange}
-        />
+      <div className="header">
+      <h2 className="table-header">Team Members</h2>
+      <button onClick={handleAddMember} className="add-member-button">
+        Add Members +
+      </button>
       </div>
+    
+
+      {isAddMemberOpen && (
+        <div className="add-member-modal">
+          <div className="add-member-modal-content">
+            <h3>Add New Member</h3>
+            <form>
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                value={newMember.name}
+                onChange={(e) =>
+                  setNewMember({ ...newMember, name: e.target.value })
+                }
+              />
+
+              <label htmlFor="company">Company:</label>
+              <input
+                type="text"
+                id="company"
+                value={newMember.company}
+                onChange={(e) =>
+                  setNewMember({ ...newMember, company: e.target.value })
+                }
+              />
+
+              <label htmlFor="status">Status:</label>
+              <input
+                type="text"
+                id="status"
+                value={newMember.status}
+                onChange={(e) =>
+                  setNewMember({ ...newMember, status: e.target.value })
+                }
+              />
+
+              <label htmlFor="lastUpdated">Last Updated:</label>
+              <input
+                type="text"
+                id="lastUpdated"
+                value={newMember.lastUpdated}
+                onChange={(e) =>
+                  setNewMember({ ...newMember, lastUpdated: e.target.value })
+                }
+              />
+
+              <label htmlFor="notes">Notes:</label>
+              <textarea
+                id="notes"
+                value={newMember.notes}
+                onChange={(e) =>
+                  setNewMember({ ...newMember, notes: e.target.value })
+                }
+              />
+
+              <div className="add-member-modal-buttons">
+                <button
+                  type="button"
+                  onClick={handleCancelAddMember}
+                  className="add-member-cancel-button"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmitAddMember}
+                  className="add-member-submit-button"
+                >
+                  Add Member
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <table className="table">
+        {/* Table header */}
         <thead>
           <tr>
             <th>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={toggleSelectAll}
+              />
             </th>
             <th>Name</th>
             <th>Company</th>
@@ -91,11 +201,28 @@ const Table = () => {
             <th>Action</th>
           </tr>
         </thead>
+        {/* Table body */}
         <tbody>
-          {filteredRecords.map((record) => (
+          {records.map((record) => (
             <tr key={record.id}>
               <td>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={record.selected}
+                  onChange={() => {
+                    const updatedRecords = records.map((rec) => {
+                      if (rec.id === record.id) {
+                        return {
+                          ...rec,
+                          selected: !rec.selected,
+                        };
+                      }
+                      return rec;
+                    });
+                    setRecords(updatedRecords);
+                    setSelectAll(updatedRecords.every((rec) => rec.selected));
+                  }}
+                />
               </td>
               <td>{record.name}</td>
               <td>{record.company}</td>

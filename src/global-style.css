@@ -80,4 +80,109 @@
   .filter-dropdown .react-select__option--is-selected {
     background-color: #e0e0e0;
   }
+  .add-member-button {
+    height: 30px;
+    margin: 25px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .add-member-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .add-member-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+  }
+  
+  .add-member-modal h3 {
+    margin-top: 0;
+  }
+  
+  .add-member-modal form {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .add-member-modal label {
+    font-weight: bold;
+  }
+  .header{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+  }
+  
+  .add-member-modal input,
+  .add-member-modal textarea {
+    width: 100%;
+    min-width: 500px !important;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .add-member-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .add-member-cancel-button,
+  .add-member-submit-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-member-cancel-button {
+    background-color: #ccc;
+    color: #fff;
+  }
+  
+  .add-member-submit-button {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .table input[type='checkbox'] {
+    transform: scale(1.5);
+  }
+  
+  .delete-icon {
+    color: red;
+    cursor: pointer;
+  }
   
