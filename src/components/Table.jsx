@@ -100,13 +100,11 @@ const Table = () => {
   return (
     <div>
       <div className="header">
-      <h2 className="table-header">Team Members</h2>
-      <button onClick={handleAddMember} className="add-member-button">
-        Add Members +
-      </button>
+        <h2 className="table-header">Team Members</h2>
+        <button onClick={handleAddMember} className="add-member-button">
+          Add Members +
+        </button>
       </div>
-    
-
       {isAddMemberOpen && (
         <div className="add-member-modal">
           <div className="add-member-modal-content">
