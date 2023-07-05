@@ -1,10 +1,10 @@
-import './global-style.css';
-import './App.css';
-import Table from  './components/Table'
+import "./global-style.css";
+import "./App.css";
+import Table from "./components/Table";
 function App() {
   return (
     <div className="App">
-         <Table />
+      <Table />
     </div>
   );
 }
